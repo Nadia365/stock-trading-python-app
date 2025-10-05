@@ -20,12 +20,9 @@ data = response.json()
 print(data.keys())
 print(data['results'])
 
-for ticker in data['results']:
-    tickers.append(ticker['ticker'])
-    
 
 while 'next_url' in data :
-    time.sleep(12) ## Wait 12 seconds to respect rate limit (adjust as needed)
+    #time.sleep(12) ## Wait 12 seconds to respect rate limit (adjust as needed)
     response= requests.get(data['next_url'] + f"&apiKey={API_Key}" ) 
     data = response.json()
     print (f"Data Keys,{data.keys()}")
@@ -33,10 +30,10 @@ while 'next_url' in data :
     if 'results' in data and data.get('status')=='OK':
         print (f"Data data,{data['results']}")
         for ticker in data['results']:
-            tickers.append(ticker['ticker']) 
+            tickers.append(ticker) 
 
-#print(f"length tickers :{len(tickers)}")
-#print(f"Tickers data :{tickers}")
+print(f"length tickers :{len(tickers)}")
+print(f"Tickers data :{tickers}")
 
 with open('tickers.json', 'w') as f:
     json.dump(tickers, f)
@@ -55,7 +52,7 @@ with open('tickers.csv', 'w', newline='', encoding='utf-8') as csvfile:
     writer.writeheader()
     for ticker in tickers:
         # Only write fields present in example_ticker schema
-        row = {field: ticker.get(field, '') for field in csv_fields}#Il fallait le format d'un doctionnaire pour écrire les data
+        row = {field: ticker.get(field, '') for field in csv_fields}
         writer.writerow(row)
 
 print("Tickers data saved to tickers.csv")
